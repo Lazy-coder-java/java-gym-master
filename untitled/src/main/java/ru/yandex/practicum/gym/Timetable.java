@@ -9,7 +9,11 @@ import java.util.TreeMap;
 
 public class Timetable {
 
-    private final Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable = new HashMap<>();
+    private final Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable;
+
+    public Timetable() {
+        timetable = new HashMap<>();
+    }
 
     public void addNewTrainingSession(TrainingSession session) {
         DayOfWeek day = session.getDayOfWeek();
@@ -62,3 +66,4 @@ public class Timetable {
         return result;
     }
 }
+
