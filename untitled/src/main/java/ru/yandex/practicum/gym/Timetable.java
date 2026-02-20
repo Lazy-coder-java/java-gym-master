@@ -1,26 +1,34 @@
 package ru.yandex.practicum.gym;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Timetable {
 
-    private final Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable;
+    private Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable;
 
     public Timetable() {
-        this.timetable = new HashMap<>();
+        timetable = new HashMap<>();
     }
 
     public void addNewTrainingSession(TrainingSession session) {
-        TreeMap<TimeOfDay, List<TrainingSession>> dayMap = timetable.get(session.getDayOfWeek());
+        DayOfWeek day = session.getDayOfWeek();
+        TimeOfDay time = session.getTimeOfDay();
+
+        TreeMap<TimeOfDay, List<TrainingSession>> dayMap = timetable.get(day);
         if (dayMap == null) {
-            dayMap = new TreeMap<>();
-            timetable.put(session.getDayOfWeek(), dayMap);
+            dayMap = new TreeMap<TimeOfDay, List<TrainingSession>>();
+            timetable.put(day, dayMap);
         }
 
-        List<TrainingSession> sessionsAtTime = dayMap.get(session.getTimeOfDay());
+        List<TrainingSession> sessionsAtTime = dayMap.get(time);
         if (sessionsAtTime == null) {
-            sessionsAtTime = new ArrayList<>();
-            dayMap.put(session.getTimeOfDay(), sessionsAtTime);
+            sessionsAtTime = new ArrayList<TrainingSession>();
+            dayMap.put(time, sessionsAtTime);
         }
 
         sessionsAtTime.add(session);
@@ -32,9 +40,9 @@ public class Timetable {
             return Collections.emptyList();
         }
 
-        List<TrainingSession> result = new ArrayList<>();
-        for (List<TrainingSession> sessions : dayMap.values()) {
-            result.addAll(sessions);
+        List<TrainingSession> result = new ArrayList<TrainingSession>();
+        for (List<TrainingSession> list : dayMap.values()) {
+            result.addAll(list);
         }
         return result;
     }
@@ -44,43 +52,43 @@ public class Timetable {
         if (dayMap == null) {
             return Collections.emptyList();
         }
-
         List<TrainingSession> sessionsAtTime = dayMap.get(time);
         if (sessionsAtTime == null) {
             return Collections.emptyList();
         }
-
         return sessionsAtTime;
     }
 
     public List<CounterOfTrainings> getCountByCoaches() {
-        Map<Coach, Integer> counter = new HashMap<>();
+        Map<Coach, Integer> counter = new HashMap<Coach, Integer>();
 
         for (TreeMap<TimeOfDay, List<TrainingSession>> dayMap : timetable.values()) {
             for (List<TrainingSession> sessions : dayMap.values()) {
-                for (TrainingSession s : sessions) {
-                    Coach coach = s.getCoach();
-                    Integer count = counter.get(coach);
-                    if (count == null) {
-                        counter.put(coach, 1);
+                for (TrainingSession session : sessions) {
+                    Coach coach = session.getCoach();
+                    if (counter.containsKey(coach)) {
+                        counter.put(coach, counter.get(coach) + 1);
                     } else {
-                        counter.put(coach, count + 1);
+                        counter.put(coach, 1);
                     }
                 }
             }
         }
 
-        List<CounterOfTrainings> result = new ArrayList<>();
+        List<CounterOfTrainings> result = new ArrayList<CounterOfTrainings>();
         for (Map.Entry<Coach, Integer> entry : counter.entrySet()) {
             result.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
         }
 
-        result.sort(new Comparator<CounterOfTrainings>() {
-            @Override
-            public int compare(CounterOfTrainings o1, CounterOfTrainings o2) {
-                return Integer.compare(o2.getCount(), o1.getCount());
+        for (int i = 0; i < result.size(); i++) {
+            for (int j = i + 1; j < result.size(); j++) {
+                if (result.get(i).getCount() < result.get(j).getCount()) {
+                    CounterOfTrainings temp = result.get(i);
+                    result.set(i, result.get(j));
+                    result.set(j, temp);
+                }
             }
-        });
+        }
 
         return result;
     }

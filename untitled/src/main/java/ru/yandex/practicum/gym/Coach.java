@@ -29,7 +29,8 @@ public class Coach {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Coach coach)) return false;
+        if (!(o instanceof Coach)) return false;
+        Coach coach = (Coach) o;
         return Objects.equals(surname, coach.surname)
                 && Objects.equals(name, coach.name)
                 && Objects.equals(middleName, coach.middleName);
