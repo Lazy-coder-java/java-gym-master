@@ -12,8 +12,13 @@ public class TimeOfDay implements Comparable<TimeOfDay> {
         this.minutes = minutes;
     }
 
-    public int getHours() { return hours; }
-    public int getMinutes() { return minutes; }
+    public int getHours() {
+        return hours;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
 
     @Override
     public int compareTo(TimeOfDay o) {

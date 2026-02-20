@@ -129,27 +129,27 @@ class TimetableTest {
         Timetable timetable = new Timetable();
 
         Coach coach1 =
-                new Coach("Иванов","Иван","И");
+                new Coach("Иванов", "Иван", "И");
         Coach coach2 =
-                new Coach("Петров","Петр","П");
+                new Coach("Петров", "Петр", "П");
 
         Group group =
-                new Group("Group", Age.ADULT,60);
+                new Group("Group", Age.ADULT, 60);
 
         timetable.addNewTrainingSession(
                 new TrainingSession(group, coach1,
                         DayOfWeek.MONDAY,
-                        new TimeOfDay(10,0)));
+                        new TimeOfDay(10, 0)));
 
         timetable.addNewTrainingSession(
                 new TrainingSession(group, coach1,
                         DayOfWeek.TUESDAY,
-                        new TimeOfDay(10,0)));
+                        new TimeOfDay(10, 0)));
 
         timetable.addNewTrainingSession(
                 new TrainingSession(group, coach2,
                         DayOfWeek.WEDNESDAY,
-                        new TimeOfDay(10,0)));
+                        new TimeOfDay(10, 0)));
 
         List<CounterOfTrainings> result =
                 timetable.getCountByCoaches();

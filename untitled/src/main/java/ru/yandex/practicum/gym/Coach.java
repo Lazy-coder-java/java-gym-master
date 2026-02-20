@@ -14,9 +14,17 @@ public class Coach {
         this.middleName = middleName;
     }
 
-    public String getSurname() { return surname; }
-    public String getName() { return name; }
-    public String getMiddleName() { return middleName; }
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
 
     @Override
     public boolean equals(Object o) {
