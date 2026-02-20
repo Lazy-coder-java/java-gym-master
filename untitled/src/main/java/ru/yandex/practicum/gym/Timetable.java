@@ -21,13 +21,13 @@ public class Timetable {
 
         TreeMap<TimeOfDay, List<TrainingSession>> dayMap = timetable.get(day);
         if (dayMap == null) {
-            dayMap = new TreeMap<TimeOfDay, List<TrainingSession>>();
+            dayMap = new TreeMap<>();
             timetable.put(day, dayMap);
         }
 
         List<TrainingSession> sessionsAtTime = dayMap.get(time);
         if (sessionsAtTime == null) {
-            sessionsAtTime = new ArrayList<TrainingSession>();
+            sessionsAtTime = new ArrayList<>();
             dayMap.put(time, sessionsAtTime);
         }
 
@@ -40,7 +40,7 @@ public class Timetable {
             return Collections.emptyList();
         }
 
-        List<TrainingSession> result = new ArrayList<TrainingSession>();
+        List<TrainingSession> result = new ArrayList<>();
         for (List<TrainingSession> list : dayMap.values()) {
             result.addAll(list);
         }
@@ -60,35 +60,23 @@ public class Timetable {
     }
 
     public List<CounterOfTrainings> getCountByCoaches() {
-        Map<Coach, Integer> counter = new HashMap<Coach, Integer>();
+        Map<Coach, Integer> counter = new HashMap<>();
 
         for (TreeMap<TimeOfDay, List<TrainingSession>> dayMap : timetable.values()) {
             for (List<TrainingSession> sessions : dayMap.values()) {
                 for (TrainingSession session : sessions) {
                     Coach coach = session.getCoach();
-                    if (counter.containsKey(coach)) {
-                        counter.put(coach, counter.get(coach) + 1);
-                    } else {
-                        counter.put(coach, 1);
-                    }
+                    counter.merge(coach, 1, Integer::sum);
                 }
             }
         }
 
-        List<CounterOfTrainings> result = new ArrayList<CounterOfTrainings>();
+        List<CounterOfTrainings> result = new ArrayList<>();
         for (Map.Entry<Coach, Integer> entry : counter.entrySet()) {
             result.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
         }
 
-        for (int i = 0; i < result.size(); i++) {
-            for (int j = i + 1; j < result.size(); j++) {
-                if (result.get(i).getCount() < result.get(j).getCount()) {
-                    CounterOfTrainings temp = result.get(i);
-                    result.set(i, result.get(j));
-                    result.set(j, temp);
-                }
-            }
-        }
+        result.sort((a, b) -> Integer.compare(b.getCount(), a.getCount()));
 
         return result;
     }
