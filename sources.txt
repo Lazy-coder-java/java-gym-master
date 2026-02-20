@@ -6,4 +6,3 @@
 ./src/main/java/ru/yandex/practicum/gym/TimeOfDay.java
 ./src/main/java/ru/yandex/practicum/gym/Timetable.java
 ./src/main/java/ru/yandex/practicum/gym/TrainingSession.java
-./src/test/java/ru/yandex/practicum/gym/TimetableTest.java

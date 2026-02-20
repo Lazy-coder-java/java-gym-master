@@ -1,28 +1,29 @@
 package ru.yandex.practicum.gym;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Timetable {
 
     private final Map<DayOfWeek, TreeMap<TimeOfDay, List<TrainingSession>>> timetable;
 
     public Timetable() {
-        timetable = new HashMap<>();
+        this.timetable = new EnumMap<>(DayOfWeek.class);
     }
 
     public void addNewTrainingSession(TrainingSession session) {
-        DayOfWeek day = session.getDayOfWeek();
+        if (session == null) {
+            throw new NullPointerException("TrainingSession не может быть null");
+        }
+        DayOfWeek day = session.getDay();
         TimeOfDay time = session.getTimeOfDay();
 
-        TreeMap<TimeOfDay, List<TrainingSession>> dayMap = timetable.computeIfAbsent(day, k -> new TreeMap<>());
-        List<TrainingSession> sessionsAtTime = dayMap.computeIfAbsent(time, k -> new ArrayList<>());
-
-        sessionsAtTime.add(session);
+        timetable
+                .computeIfAbsent(day, d -> new TreeMap<>())
+                .computeIfAbsent(time, t -> new ArrayList<>())
+                .add(session);
     }
 
     public List<TrainingSession> getTrainingSessionsForDay(DayOfWeek day) {
@@ -30,12 +31,11 @@ public class Timetable {
         if (dayMap == null) {
             return Collections.emptyList();
         }
-
-        List<TrainingSession> result = new ArrayList<>();
-        for (List<TrainingSession> list : dayMap.values()) {
-            result.addAll(list);
+        List<TrainingSession> allSessions = new ArrayList<>();
+        for (List<TrainingSession> sessions : dayMap.values()) {
+            allSessions.addAll(sessions);
         }
-        return result;
+        return allSessions;
     }
 
     public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek day, TimeOfDay time) {
@@ -46,24 +46,39 @@ public class Timetable {
         return dayMap.getOrDefault(time, Collections.emptyList());
     }
 
-    public List<CounterOfTrainings> getCountByCoaches() {
-        Map<Coach, Integer> counter = new HashMap<>();
-
+    public List<CoachCount> getCountByCoaches() {
+        Map<Coach, Integer> counts = new HashMap<>();
         for (TreeMap<TimeOfDay, List<TrainingSession>> dayMap : timetable.values()) {
             for (List<TrainingSession> sessions : dayMap.values()) {
                 for (TrainingSession session : sessions) {
-                    counter.merge(session.getCoach(), 1, Integer::sum);
+                    counts.put(session.getCoach(),
+                            counts.getOrDefault(session.getCoach(), 0) + 1);
                 }
             }
         }
+        List<CoachCount> result = new ArrayList<>();
+        for (Map.Entry<Coach, Integer> entry : counts.entrySet()) {
+            result.add(new CoachCount(entry.getKey(), entry.getValue()));
+        }
+        return result;
+    }
 
-        List<CounterOfTrainings> result = new ArrayList<>();
-        for (Map.Entry<Coach, Integer> entry : counter.entrySet()) {
-            result.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
+    public static class CoachCount {
+        private final Coach coach;
+        private final int count;
+
+        public CoachCount(Coach coach, int count) {
+            this.coach = coach;
+            this.count = count;
         }
 
-        result.sort((a, b) -> Integer.compare(b.getCount(), a.getCount()));
-        return result;
+        public Coach getCoach() {
+            return coach;
+        }
+
+        public int getCount() {
+            return count;
+        }
     }
 }
 
