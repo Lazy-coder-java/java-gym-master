@@ -1,0 +1,9 @@
+./src/main/java/ru/yandex/practicum/gym/Age.java
+./src/main/java/ru/yandex/practicum/gym/Coach.java
+./src/main/java/ru/yandex/practicum/gym/CounterOfTrainings.java
+./src/main/java/ru/yandex/practicum/gym/DayOfWeek.java
+./src/main/java/ru/yandex/practicum/gym/Group.java
+./src/main/java/ru/yandex/practicum/gym/TimeOfDay.java
+./src/main/java/ru/yandex/practicum/gym/Timetable.java
+./src/main/java/ru/yandex/practicum/gym/TrainingSession.java
+./src/test/java/ru/yandex/practicum/gym/TimetableTest.java
