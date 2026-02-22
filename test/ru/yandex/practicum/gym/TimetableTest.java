@@ -93,4 +93,15 @@ public class TimetableTest {
         assertEquals(2, result.get(0).getCount());
         assertEquals(1, result.get(1).getCount());
     }
+
+    @Test
+    void testEmptyDayReturnsEmptyList() {
+
+        Timetable timetable = new Timetable();
+
+        List<TrainingSession> sessions =    timetable.getTrainingSessionsForDay(DayOfWeek.SUNDAY);
+
+        assertNotNull(sessions);
+        assertTrue(sessions.isEmpty());
+    }
 }

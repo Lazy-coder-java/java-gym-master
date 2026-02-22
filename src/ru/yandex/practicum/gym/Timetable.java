@@ -26,6 +26,10 @@ public class Timetable {
     public List<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
         TreeMap<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
 
+        if (daySchedule == null) {
+            return Collections.emptyList();
+        }
+
         List<TrainingSession> result = new ArrayList<>();
 
         for (TimeOfDay time : daySchedule.navigableKeySet()) {
@@ -38,6 +42,10 @@ public class Timetable {
     public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek,
                                                                   TimeOfDay timeOfDay) {
         TreeMap<TimeOfDay, List<TrainingSession>> daySchedule = timetable.get(dayOfWeek);
+
+        if (daySchedule == null) {
+            return Collections.emptyList();
+        }
 
         return new ArrayList<>(daySchedule.getOrDefault(timeOfDay, Collections.emptyList()));
     }
@@ -66,3 +74,4 @@ public class Timetable {
         return result;
     }
 }
+
